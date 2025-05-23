@@ -1,0 +1,54 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <h1>감정분석</h1>
+        <textarea id="text-input" placeholder="텍스트를 입력해주세요."></textarea>
+        <button onclick="analyze()">분석하기</button>
+        <div id="result">
+
+        </div>
+    </div>
+    <script>
+        async function analyze() {
+            // 1. DOM을 찾아야 함
+            // 2. 전송
+            // 3. 비동기로 반환값 출력
+            const text = document.getElementById("text-input").value; // 돔 찾는 과정
+            const resultDiv = document.getElementById("result");
+
+            if (!text.trim()){
+                alert("텍스트를 입력해주세요.")
+                return
+            }
+
+            try{
+                const response = await fetch('http://127.0.0.1:5001/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({text:text})
+                })
+
+                const data = await response.json()
+
+                if(!response.ok){ // 200인지 확인
+                    throw new Error(data.error || "API에 문제가 발생하였습니다.") // async는 return 안 함. throw로 던져야 함
+                }
+
+                if(data.emotion == "1")
+                    resultDiv.textContent = "긍정😀"
+                else resultDiv.textContent = "부정😠"
+            }
+            catch(error){
+                resultDiv.textContent = `오류: ${error.message}`
+            }
+        }
+    </script>
+</body>
+</html>

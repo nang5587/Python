@@ -12,3 +12,5 @@ online_resources_site/site/
 
 
 머신러닝/housing_v1.pkl
+머신러닝/lr_v1.pkl
+머신러닝/tfidf_vect.pkl
